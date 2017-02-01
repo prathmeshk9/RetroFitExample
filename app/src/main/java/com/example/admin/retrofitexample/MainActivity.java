@@ -14,6 +14,12 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OnActivityResult;
+import org.androidannotations.annotations.ViewById;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,53 +29,47 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+@EActivity(R.layout.activity_main)
+public class MainActivity extends AppCompatActivity{
 
-    private EditText editTextName;
-    private EditText editTextUsername;
-    private EditText editTextPassword;
-    private EditText editTextEmail;
+    private static final String TAG = "MainActivity";
 
+    @ViewById(R.id.editTextName)
+    EditText editTextName;
+    @ViewById(R.id.editTextEmail)
+    EditText editTextEmail;
+    @ViewById(R.id.editTextPassword)
+    EditText editTextPassword;
+    @ViewById(R.id.editTextUsername)
+    EditText editTextUsername;
+    @ViewById(R.id.textView12)
     TextView tv12;
 
-    private Button buttonRegister;
-    private Button getData;
+    @Click
+    void buttonGetData() {
+        // getDataFromServer();
+    }
+
+    @Click
+    void buttonRegister() {
+        insertUser();
+    }
+
+
+    @AfterViews
+    protected void init() {
+        // your custom code
+        Toast.makeText(MainActivity.this, "dfshfsdnfsd",Toast.LENGTH_LONG).show();
+        getDataFromServer();
+    }
+
+
+
+
 
     //This is our root url
     public static final String ROOT_URL = "http://192.168.1.136/";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        //Initializing Views
-        editTextName = (EditText) findViewById(R.id.editTextName);
-        editTextUsername = (EditText) findViewById(R.id.editTextUsername);
-        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-
-        buttonRegister = (Button) findViewById(R.id.buttonRegister);
-        getData = (Button) findViewById(R.id.buttonGetData);
-
-        tv12 = (TextView) findViewById(R.id.textView12);
-
-
-        //Adding listener to button
-        buttonRegister.setOnClickListener(this);
-        getData.setOnClickListener(this);
-    }
-
-    //Overriding onclick method
-    @Override
-    public void onClick(View v) {
-        //Calling insertUser on button click
-        insertUser();
-
-        if(v.getId()==R.id.buttonGetData){
-            getDataFromServer();
-        }
-    }
 
     private void insertUser() {
         //Here we will handle the http request to insert user to mysql db
