@@ -13,15 +13,12 @@ import retrofit.http.GET;
 import retrofit.http.Header;
 import retrofit.http.Headers;
 import retrofit.http.POST;
- 
-/**
- * Created by Belal on 11/5/2015.
- */
+
 public interface RegisterAPI {
 
     @FormUrlEncoded
     @POST("/RetrofitExample/insert.php")
-    public void insertUser(
+    void insertUser(
             @Field("name") String name,
             @Field("username") String username,
             @Field("password") String password,
@@ -29,11 +26,11 @@ public interface RegisterAPI {
             Callback<Response> callback);
 
     @GET("/RetrofitExample/getUser.php")
-    public void getUser(Callback<Response> callback);
+    void getUser(Callback<Response> callback);
 
     @Headers( {"Content-Type: application/json","api-SOCIAL-API-KEY-ANDROID:SOCIAL_ANDROID"})
     @POST("/connectory/backend/web/api/V2/mobile/getcontact")
-    public void getConatct(
+    void getConatct(
             @Body JsonObject POST_PARAM,
             Callback<Response> callback);
 

@@ -3,7 +3,6 @@ package com.example.admin.retrofitexample;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,9 +13,6 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.gson.JsonObject;
-
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,7 +25,6 @@ import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG = "MainActivity";
     private EditText editTextName;
     private EditText editTextUsername;
     private EditText editTextPassword;
@@ -42,9 +37,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //This is our root url
     public static final String ROOT_URL = "http://192.168.1.136/";
-
-    //This Cool Acharya root
-    public static final String MY_ROOT = "http://coolacharya.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +51,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         buttonRegister = (Button) findViewById(R.id.buttonRegister);
         getData = (Button) findViewById(R.id.buttonGetData);
+
         tv12 = (TextView) findViewById(R.id.textView12);
+
 
         //Adding listener to button
         buttonRegister.setOnClickListener(this);
@@ -70,11 +64,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         //Calling insertUser on button click
-        if(v.getId()==R.id.buttonRegister) {
-            insertUser();
-        }
+        insertUser();
+
         if(v.getId()==R.id.buttonGetData){
-            Log.d(TAG, "onClick: ");
             getDataFromServer();
         }
     }
@@ -118,6 +110,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             e.printStackTrace();
                         }
 
+
+
                         //Displaying the output as a toast
                         Toast.makeText(MainActivity.this, output, Toast.LENGTH_LONG).show();
                     }
@@ -135,19 +129,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Here we will handle the http request to get user info from mysql db
         //Creating a RestAdapter
         RestAdapter adapter = new RestAdapter.Builder()
-                .setEndpoint(MY_ROOT) //Setting the Root URL
+                .setEndpoint(ROOT_URL) //Setting the Root URL
                 .build(); //Finally building the adapter
 
         //Creating object for our interface
         RegisterAPI api = adapter.create(RegisterAPI.class);
 
-        Log.d(TAG, "Retro called...: ");
-
-        String userid = "1";
-        JsonObject POST_PARAM = new JsonObject();
-        POST_PARAM.addProperty("userid", userid);
-
-        api.getConatct(POST_PARAM,new Callback<Response>() {
+        api.getUser(new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 BufferedReader reader = null;
@@ -169,12 +157,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 tv12.setText(sb.toString());
                 //Displaying the output as a toast
-                Toast.makeText(MainActivity.this, " "+ response.getStatus(), Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, output, Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d(TAG, "failure: "+error);
+
             }
         });
     }
